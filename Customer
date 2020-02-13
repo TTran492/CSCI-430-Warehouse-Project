@@ -36,12 +36,6 @@ public class Customer implements Serializable{
 	}
 
 
-	public Double updateBalance(Double orderPrice)
-	{
-		this.Client_billing = Customer_billing - orderPrice;
-		return Customer_billing;
-	}
-
 	public String getID()
 	{
 		return Customer_id;
