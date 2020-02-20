@@ -10,12 +10,15 @@ public class Customer implements Serializable{
 	private String Customer_id;
 	private String Customer_phone;
 	private String Customer_address;
+	private Double Client_billing;
+	
 	private List<Waitlist> waitlistedProducts = new LinkedList<Waitlist>();
 	public Customer(String Name, String phone,  String address, Double billing)
 	{
 		this.Customer_name    = Name;
 		this.Customer_phone   = phone;
 		this.Customer_address = address;
+		this.Client_billing = billing;
 
 		Customer_id = Customer_STRING + (CustomerIDServer.instance()).getID();//generates id through the client id server
 	}
