@@ -10,7 +10,7 @@ public class Customer implements Serializable{
 	private String Customer_id;
 	private String Customer_phone;
 	private String Customer_address;
-	private Double Client_billing;
+	private Double Customer_billing;
 	
 	private List<Waitlist> waitlistedProducts = new LinkedList<Waitlist>();
 	public Customer(String Name, String phone,  String address, Double billing)
@@ -18,7 +18,7 @@ public class Customer implements Serializable{
 		this.Customer_name    = Name;
 		this.Customer_phone   = phone;
 		this.Customer_address = address;
-		this.Client_billing = billing;
+		this.Customer_billing = billing;
 
 		Customer_id = Customer_STRING + (CustomerIDServer.instance()).getID();//generates id through the client id server
 	}
@@ -37,13 +37,25 @@ public class Customer implements Serializable{
 	{
 		return Customer_phone;
 	}
-
+	public Double getBilling()
+ 	 {
+		return Customer_billing;
+	}
+	public Double updateBalance(Double orderPrice)
+	{
+		this.Customer_billing = Customer_billing - orderPrice;
+		return Customer_billing;
+	}
 
 	public String getID()
 	{
 		return Customer_id;
 	}
-
+	public CustomerOrder newOrder()
+	{
+		CustomerOrder order = new CustomerOrder();
+		return order;
+	}
 
 	public boolean addProductToWaitlist(Waitlist w){
 		return waitlistedProducts.add(w);
@@ -76,7 +88,8 @@ public class Customer implements Serializable{
 
 	public String toString()
 	{
-		return "Customer: " + getName() + ".  Phone: " + getPhone()+ ". ID: "+ getID()+". Address: "+getAddress();
+		return "Customer: " + getName() + ".  Phone: " + getPhone()+ ". ID: "+ getID()+". Address: "+getAddress()+ " Balance: $" + getBilling();
+
 	}
 
 }
