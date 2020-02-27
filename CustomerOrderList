@@ -23,7 +23,7 @@ public boolean addOrder(CustomerOrder order){
     }
      public Iterator<CustomerOrder> getCustomerOrders()
   {
-    return customers.iterator();
+    return CustomersOrders.iterator();
   }
     public CustomerOrder search(String orderID)
     {
