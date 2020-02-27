@@ -1,0 +1,70 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+public class CustomerList implements Serializable{
+  private static final long serialVersionUID = 1L;
+  private List<CustomerOrder> Orders = new LinkedList<CustomerOrder>();
+  private static CustomerOrderList customerOrderList;
+
+  private CustomerOrderList(){
+  }
+
+public boolean addOrder(CustomerOrder order){
+      return CustomerOrders.add(order);
+    }
+
+    public static CustomerOrderList instance() {
+          if (customerOrderList == null) {
+              return (customerOrderList = new CustomerOrderList());
+          }
+          else {
+              return customerOrderList;
+          }
+    }
+
+    public CustomerOrder search(String orderID)
+    {
+        for (Iterator iterator = CustomerOrders.iterator(); iterator.hasNext(); )
+        {
+            CustomerOrder customerOrder = (CustomerOrder) iterator.next();
+            if (customerOrder.getID().equals(orderID))
+            {
+                return customerOrder;
+            }
+        }
+        return null;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream output) {
+          try {
+              output.defaultWriteObject();
+              output.writeObject(customerOrderList);
+          }
+          catch(IOException ioe) {
+              System.out.println(ioe);
+          }
+    }
+
+    private void readObject(java.io.ObjectInputStream input) {
+          try {
+              if (customerOrderList != null) {
+                  return;
+              }
+              else {
+                  input.defaultReadObject();
+                  if (customerOrderList == null) {
+                      customerOrderList = (CustomerOrderList) input.readObject();
+                  }
+                  else {
+                      input.readObject();
+                  }
+              }
+          }
+          catch(IOException ioe) {
+              System.out.println("in CustomerOrders readObject \n" + ioe);
+          }
+          catch(ClassNotFoundException cnfe) {
+              cnfe.printStackTrace();
+          }
+      }
+}
