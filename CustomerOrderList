@@ -21,7 +21,7 @@ public boolean addOrder(CustomerOrder order){
               return customerOrderList;
           }
     }
-     public Iterator<Customer> getCustomers()
+     public Iterator<CustomerOrder> getCustomerOrders()
   {
     return customers.iterator();
   }
