@@ -21,7 +21,10 @@ public boolean addOrder(CustomerOrder order){
               return customerOrderList;
           }
     }
-
+     public Iterator<Customer> getCustomers()
+  {
+    return customers.iterator();
+  }
     public CustomerOrder search(String orderID)
     {
         for (Iterator iterator = CustomerOrders.iterator(); iterator.hasNext(); )
