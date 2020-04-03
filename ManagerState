@@ -1,7 +1,6 @@
 import java.util.*;
 import java.text.*;
 import java.io.*;
-
 public class ManagerState extends WareHouseState {
 
     
@@ -9,13 +8,13 @@ public class ManagerState extends WareHouseState {
     private static Warehouse warehouse;
     private WarehouseContext context;
     private static ManagerState instance;
-    private static final int EXIT = IOHelper.EXIT;
+    private static final int EXIT = 0;
     private static final int ADD_PRODUCT = 1;
     private static final int ADD_MANUFACTURER = 2;
     private static final int LIST_MANUFACTURERS = 3;
     private static final int ASSIGN_PROD = 4;
-    private static final int Clerk_MENU = 5;
-    private static final int HELP = IOHelper.HELP;
+    private static final int CLERK_MENU = 5;
+    private static final int HELP = 12;
     
     private ManagerState() {
         super();
@@ -32,11 +31,11 @@ public class ManagerState extends WareHouseState {
      private int getNumber(String prompt) {
         do {
             try {
-                String item = IOHelper.getToken(prompt);
+                String item = getToken(prompt);
                 Integer num = Integer.valueOf(item);
                 return num.intValue();
             } catch (NumberFormatException nfe) {
-                IOHelper.Println("Please input a number ");
+                System.out.Println("Please input a number ");
             }
         } while (true);
     }
@@ -54,16 +53,16 @@ public class ManagerState extends WareHouseState {
     }
   }
     private void addManufacturer() {
-        String name = IOHelper.getToken("Enter manufacturer name");
-        String address = IOHelper.getToken("Enter address");
-        String phone = IOHelper.getToken("Enter phone");
-        Manufacturer result;
-        result = warehouse.addManufacturer(name, address, phone);
-        if (result == null) {
-            System.out.println("Could not add manufacturer");
-        }
-        System.out.println(result);
+        String name = getToken("Enter manufacturer name");
+    String address = getToken("Enter address");
+    String phone = getToken("Enter phone");
+    Manufacturer result;
+    result = warehouse.addManufacturer(name, phone, address);
+    if (result == null) {
+      System.out.println("Could not add manufacturer");
     }
+	System.out.println(result);
+  }
     
     private void listManufacturers() {
          Iterator<Manufacturer>  allManufacturers = warehouse.getManufacturers();
@@ -165,13 +164,13 @@ public class ManagerState extends WareHouseState {
     }
     
     private void help() {
-        IOHelper.Println("Enter a number between " + EXIT + " and " + HELP + " as explained below:");
-        IOHelper.Println(EXIT + " to Exit\n");
-        IOHelper.Println(ADD_MANUFACTURER + " to add manufacturer");
-        IOHelper.Println(SHOW_MANUFACTURERS + " to  display all manufacturers.");
-        IOHelper.Println(ASSIGN_PROD + " to assign product to manufacturer.");
-        IOHelper.Println(Clerk_MENU + " to  switch to the Clerk Person menu");
-        IOHelper.Println(HELP + " for help.");
+        System.out.Println("Enter a number between " + EXIT + " and " + HELP + " as explained below:");
+        System.out.Println(EXIT + " to Exit\n");
+        System.out.Println(ADD_MANUFACTURER + " to add manufacturer");
+        System.out.Println(SHOW_MANUFACTURERS + " to  display all manufacturers.");
+        System.out.Println(ASSIGN_PROD + " to assign product to manufacturer.");
+        System.out.Println(CLERK_MENU + " to  switch to the Clerk Person menu");
+        System.out.Println(HELP + " for help.");
     }
     
     public void logout()
@@ -182,7 +181,7 @@ public class ManagerState extends WareHouseState {
     public void process() {
         int command;
         help();
-        while ((command = IOHelper.GetCmd()) != EXIT) {
+        while ((command = getCommand ()) != EXIT) {
             switch (command) {
             	Case ADD_PRODUCT: addProduct();
                                 break;
@@ -196,7 +195,7 @@ public class ManagerState extends WareHouseState {
                 case ASSIGN_PROD: assignProduct();
                                 break;
 
-                case Clerk_MENU: ClerkMenu();
+                case CLERK_MENU: ClerkMenu();
                                 break;
                 case HELP: help();
                                 break;
