@@ -123,10 +123,10 @@ public class Loginstate extends WareHouseState {
             System.out.println("Please input 0 to login as Clerk\n"+
              "input 1 to login as user\n" +
              "input 2 to exit the system\n"); 
-            System.out.println("WELCOME MANAGER. PLEASE ENTER 0.\n");
+           /* System.out.println("WELCOME MANAGER. PLEASE ENTER 0.\n");
                     // + "input 1 to login as Salesclerk\n"
                     // + "input 2 to login as CUSTOMER\n"
-                    // + "input 3 to exit the system\n");
+                    // + "input 3 to exit the system\n");*/
         }
         //(WarehouseContext.instance()).changeState(2);
         (WarehouseContext.instance()).changeState(3);
