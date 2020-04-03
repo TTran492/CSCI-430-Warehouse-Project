@@ -1,0 +1,243 @@
+import java.util.*;
+import java.text.*;
+import java.io.*;
+public class ManagerState extends WarehouseState {
+
+    
+    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private static Warehouse warehouse;
+    private WarehouseContext context;
+    private static ManagerState instance;
+    private static final int EXIT = 0;
+    private static final int ADD_PRODUCT = 1;
+    private static final int ADD_MANUFACTURER = 2;
+    private static final int LIST_MANUFACTURERS = 3;
+    private static final int ASSIGN_PROD = 4;
+    private static final int CLERK_MENU = 5;
+    private static final int HELP = 12;
+    
+    private ManagerState() {
+        super();
+        warehouse = Warehouse.instance();
+    }
+
+    public static ManagerState instance() {
+        if (instance == null) {
+            instance = new ManagerState();
+        }
+        return instance;
+    }
+    
+	public String getToken(String prompt)
+  {
+    do{
+      try{
+        System.out.println(prompt);
+        String line = reader.readLine();
+        StringTokenizer tokenizer = new StringTokenizer(line, "\n\r\f");
+        if (tokenizer.hasMoreTokens())
+        {
+          return tokenizer.nextToken();
+        }
+      } catch (IOException ioe){
+        System.exit(0);
+      }
+    } while (true);
+  }
+  
+     private int getNumber(String prompt) {
+        do {
+            try {
+                String item = getToken(prompt);
+                Integer num = Integer.valueOf(item);
+                return num.intValue();
+            } catch (NumberFormatException nfe) {
+                System.out.println("Please input a number ");
+            }
+        } while (true);
+    }
+	
+	public int getCommand()
+  {
+    do {
+      try{
+        int value = Integer.parseInt(getToken("Enter command:    (" + HELP + "for help)"));
+        if (value >= EXIT && value <= HELP)
+        {
+            return value;
+        }
+      }catch (NumberFormatException nfe){
+        System.out.println("Enter a number");
+      }
+    }while (true);
+  }
+  
+    private void addProduct() {
+      String Name = getToken("Enter product name: ");
+    Product result;
+    result = warehouse.addProduct(Name);
+    if (result == null)
+    {
+      System.out.println("Could not add product.");
+    }
+    else
+    {
+      System.out.println(result);
+    }
+  }
+    private void addManufacturer() {
+        String name = getToken("Enter manufacturer name");
+    String address = getToken("Enter address");
+    String phone = getToken("Enter phone");
+    Manufacturer result;
+    result = warehouse.addManufacturer(name, phone, address);
+    if (result == null) {
+      System.out.println("Could not add manufacturer");
+    }
+	System.out.println(result);
+  }
+    
+    private void listManufacturers() {
+         Iterator<Manufacturer>  allManufacturers = warehouse.getManufacturers();
+    if(allManufacturers.hasNext() == false){
+      System.out.println("No Manufacturer in the System.\n");
+      return;
+    }else{
+      System.out.println("-------------------------------------------------");
+      while ((allManufacturers.hasNext()) != false)
+      {
+        Manufacturer manufacturer = allManufacturers.next();
+        System.out.println(manufacturer.toString());
+      }
+      System.out.println("-------------------------------------------------\n");
+    }
+    }
+    
+    private void assignProduct() 
+       {
+    String pID = getToken("Enter product ID: ");
+    Product product;
+    if ((product=warehouse.searchProduct(pID)) == null)
+    {
+      System.out.println("Product does not exist.");
+      return;
+    }
+
+    String mID = getToken("Enter manufacturer ID: ");
+    Manufacturer m;
+    if ((m=warehouse.searchManufacturer(mID)) == null)
+    {
+      System.out.println("No such manufacturer.");
+      return;
+    }
+
+    double p;
+    while (true)
+    {
+      String price = getToken("Enter product unit price: ");
+      try {
+        p = Double.parseDouble(price);
+        break; // will only get to here if input was a double
+        } catch (NumberFormatException ignore) {
+        System.out.println("Invalid input");
+      }
+    }
+
+    int q;
+    while (true)
+    {
+      String quantity = getToken("Enter product quantity:  (if unknown or NA, enter 0)");
+      try {
+        q = Integer.parseInt(quantity);
+        break; // will only get to here if input was an int
+        } catch (NumberFormatException ignore) {
+        System.out.println("Invalid input");
+      }
+    }  
+	
+	product = warehouse.assignProdToManufacturer(pID, mID, p, q);
+      if (product != null)
+      {
+        System.out.println("Product " + product.getProdName() + " assigned to " + m.getName() + " successfully.");
+      }
+      else
+      {
+        System.out.println("Product could not be assigned.");
+      }
+  }
+
+
+    private void ClerkMenu()
+    {     
+      (WarehouseContext.instance()).changeState(1); //go to Clerk state
+    }
+    
+    private void save() {
+        if (warehouse.save()) {
+            System.out.println(" The warehouse has been successfully saved in the file WarehouseData \n");
+        } else {
+            System.out.println(" There has been an error in saving \n");
+        }
+    }
+
+    private void retrieve() {
+        try {
+            Warehouse tempLibrary = Warehouse.retrieve();
+            if (tempLibrary != null) {
+                System.out.println(" The warehouse has been successfully retrieved from the file WarehouseData \n");
+                warehouse = tempLibrary;
+            } else {
+                System.out.println("File doesnt exist; creating new warehouse");
+                warehouse = Warehouse.instance();
+
+            }
+        } catch (Exception cnfe) {
+            cnfe.printStackTrace();
+        }
+    }
+    
+    private void help() {
+        System.out.println("Enter a number between " + EXIT + " and " + HELP + " as explained below:");
+        System.out.println(EXIT + " to Exit\n");
+        System.out.println(ADD_MANUFACTURER + " to add manufacturer");
+        System.out.println(LIST_MANUFACTURERS + " to  display all manufacturers.");
+        System.out.println(ASSIGN_PROD + " to assign product to manufacturer.");
+        System.out.println(CLERK_MENU + " to  switch to the Clerk Person menu");
+        System.out.println(HELP + " for help.");
+    }
+    
+    public void logout()
+    {
+        (WarehouseContext.instance()).changeState(3); // exit
+    }
+    
+    public void process() {
+        int command;
+        help();
+        while ((command = getCommand()) != EXIT) {
+            switch (command) {
+            	case ADD_PRODUCT: addProduct();
+                                break;
+
+                case ADD_MANUFACTURER: addManufacturer();
+                                break;
+
+                case LIST_MANUFACTURERS: listManufacturers();
+                                break;
+
+                case ASSIGN_PROD: assignProduct();
+                                break;
+
+                case CLERK_MENU: ClerkMenu();
+                                break;
+                case HELP: help();
+                                break;
+            }
+        }
+        logout();
+    }
+    
+    public void run() {
+        process();
+    }
+}
